@@ -4,6 +4,7 @@ from rest_framework.reverse import reverse
 from contests.models import Contest, ContestProblem
 from utils.serializers import MultiParamsHyperlinkedIdentityField
 
+from problems.serializers import BriefProblemDetailSerializer
 
 # 比赛列表
 class ContestListSerializer(serializers.HyperlinkedModelSerializer):
@@ -19,7 +20,7 @@ class ContestListSerializer(serializers.HyperlinkedModelSerializer):
                   'start_time', 'end_time', 'status', 'author')
 
 
-# 比赛题目
+# 比赛题目列表
 class ContestProblemSerializer(serializers.ModelSerializer):
 
     url = MultiParamsHyperlinkedIdentityField(
@@ -37,10 +38,12 @@ class ContestProblemSerializer(serializers.ModelSerializer):
 # 比赛题目细节
 class ContestProblemDetailSerializer(serializers.ModelSerializer):
 
+    problem = BriefProblemDetailSerializer(read_only=True)
+
     class Meta:
         model = ContestProblem
-        fields = '__all__'
-        depth = 1
+        fields = ('sort', 'problem')
+        # depth = 1
 
 
 # 比赛细节
