@@ -45,7 +45,9 @@ python manage.py runserver
 ### 创建管理员
 ```bash
 python manage.py createsuperuser
-# Username     : root
-# Email Address: -
-# Password     : shuojroot
 ```
+
+## 参考
+[Django 1.10 Documents](http://docs.djangoproject.com/en/1.10/)
+[Django Rest Framework 3 Documents](http://www.django-rest-framework.org/)
+[QingdaoU-OnlineJudge](https://github.com/QingdaoU/OnlineJudge)

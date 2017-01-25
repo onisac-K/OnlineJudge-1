@@ -10,6 +10,7 @@ class MultiParamsHyperlinkedIdentityField(serializers.HyperlinkedIdentityField):
     lookup_fields is a tuple of tuples of the form:
         ('model_field', 'url_parameter')
     """
+    lookup_fields = None
 
     def __init__(self, *args, **kwargs):
         self.lookup_fields = kwargs.pop('lookup_fields', self.lookup_fields)

@@ -1,13 +1,16 @@
-from rest_framework import viewsets
-from rest_framework import mixins
 from rest_framework import generics
 from rest_framework.response import Response
-from rest_framework.decorators import list_route, detail_route
-from rest_framework.permissions import AllowAny
-from contests.models import Contest, ContestProblem
-from contests.serializers import ContestListSerializer, ContestDetailSerializer, ContestProblemDetailSerializer
 
 from django.shortcuts import get_object_or_404
+
+from contests.models import (
+    Contest, ContestProblem
+)
+from contests.serializers import (
+    ContestListSerializer,
+    ContestDetailSerializer,
+    ContestProblemDetailSerializer
+)
 
 
 class ContestListAPIView(generics.ListAPIView):
