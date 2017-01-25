@@ -2,8 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from utils.models import CodeLang
 
-from markdown import markdown
-
+from markdown import Markdown
 
 class Problem(models.Model):
     """基本信息"""
@@ -57,10 +56,11 @@ class Problem(models.Model):
     # TODO: 代码段高亮，转义，但是文本段支持内嵌html
     # TODO: MathJax
     def save(self, *args, **kwargs):
-        self.description = markdown(self.description_md, safe_mode='escape')
-        self.input_description = markdown(self.input_description_md)
-        self.output_description = markdown(self.output_description_md)
-        self.hint = markdown(self.hint_md)
+        md = Markdown(extensions=['markdown.extensions.fenced_code']).convert
+        self.description = md(self.description_md)
+        self.input_description = md(self.input_description_md)
+        self.output_description = md(self.output_description_md)
+        self.hint = md(self.hint_md)
         super(Problem, self).save(*args, **kwargs)
 
     def __str__(self):

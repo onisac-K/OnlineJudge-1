@@ -41,3 +41,9 @@ class ProblemViewSet(viewsets.ModelViewSet):
     # 创建题目时，当前用户作为作者
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    @detail_route(renderer_classes=[renderers.StaticHTMLRenderer])
+    def test(self, request, *args, **kwargs):
+        problem = self.get_object()
+        return Response(problem.description)
+
