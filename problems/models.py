@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from utils.models import CodeLang
 
-from markdown import Markdown
+from utils.markdown import md
 
 class Problem(models.Model):
     """基本信息"""
@@ -53,10 +53,9 @@ class Problem(models.Model):
         ordering = ('id',)
 
     # 解析Markdown，然后再保存其它字段
-    # TODO: 代码段高亮，转义，但是文本段支持内嵌html
+    # TODO: ~代码段高亮~，转义，但是文本段支持内嵌html
     # TODO: MathJax
     def save(self, *args, **kwargs):
-        md = Markdown(extensions=['markdown.extensions.fenced_code']).convert
         self.description = md(self.description_md)
         self.input_description = md(self.input_description_md)
         self.output_description = md(self.output_description_md)
