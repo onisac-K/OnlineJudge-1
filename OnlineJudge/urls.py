@@ -24,7 +24,7 @@ import profiles
 
 urlpatterns = [
     # API ROOT
-    url(r'^$', api_root),
+    url(r'^$', api_root, name='api-root'),
 
     # 管理员
     url(r'^admin/', admin.site.urls, name='admin'),
@@ -33,6 +33,12 @@ urlpatterns = [
     url(r'^profile/', include('profiles.urls')),
     url(r'^ranklist/$', profiles.views.RanklistAPIView.as_view(), name='ranklist'),
     url(r'^register/$', profiles.views.SignUpAPIView.as_view(), name='sign-up'),
+
+    # Problem 相关
+    url(r'^problem/', include('problems.urls')),
+
+    # Contest 相关
+    url(r'^contest/', include('contests.urls')),
 ]
 
 # Login and logout views for the browsable API

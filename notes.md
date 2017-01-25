@@ -16,3 +16,23 @@ class Track(models.Model):
         unique_together = ('album', 'order')
         ordering = ['order']
 ```
+
+## `HyperlinkedRelatedField`与`HyperlinkedIdentityField`的区别
+前者在关联字段中查询，而后者在自身查询。
+```python
+# search `lookup_field` in `author`
+class ProblemListSerializer(serializers.ModelSerializer):
+    author = serializers.HyperlinkedRelatedField(
+        read_only=True,
+        lookup_field='username',
+        view_name='user-detail'
+)
+
+# search `lookup_field` in `self`
+class ProblemListSerializer(serializers.ModelSerializer):
+    author = serializers.HyperlinkedIdentityField(
+        read_only=True,
+        lookup_field='username',
+        view_name='user-detail'
+)
+```

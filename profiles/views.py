@@ -1,6 +1,4 @@
 from rest_framework import generics
-from rest_framework import mixins
-from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from django.contrib.auth.models import User
@@ -30,3 +28,7 @@ class SignUpAPIView(generics.CreateAPIView):
 
     def get(self, request, format=None):
         return Response({'info': '注册页面'})
+
+    def perform_create(self, serializer):
+        User.objects.create_user(**serializer.validated_data)
+        
