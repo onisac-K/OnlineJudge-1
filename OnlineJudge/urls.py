@@ -39,6 +39,9 @@ urlpatterns = [
 
     # Contest 相关
     url(r'^contest/', include('contests.urls')),
+
+    # Submission 相关
+    url(r'^submission/', include('submissions.urls')),
 ]
 
 # Login and logout views for the browsable API
