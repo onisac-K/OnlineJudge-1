@@ -4,6 +4,7 @@ from problems.models import Problem
 from contests.models import Contest
 from utils.models import CodeLang
 from utils.vars import JUDGE_STATUS
+from django.db.models.signals import post_save
 
 
 class Submission(models.Model):
@@ -42,3 +43,18 @@ class Submission(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+# 创建Submission时自动判题
+def judge_submission(sender, instance, created, **kwargs):
+    if created:
+        from random import choice
+        result = choice(JUDGE_STATUS)
+        print('=' * 20, 'Judge: ', result[1], '=' * 20)
+        instance.status = result[0]
+        print('=' * 20, 'Judge: ', result[1], '=' * 20)
+        instance.save()
+    else:
+        raise Exception('Submission not created.')
+
+post_save.connect(judge_submission, sender=Submission)

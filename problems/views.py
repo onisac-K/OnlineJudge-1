@@ -1,49 +1,50 @@
 from rest_framework import viewsets
 from rest_framework import generics
 from rest_framework import renderers
+from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from problems.models import Problem
-from problems import permissions
+from problems import permissions, utils
 from problems.serializers import ProblemListSerializer, ProblemDetailSerializer, ProblemUpdateSerializer
 
+from submissions.models import Submission
+from submissions.serializers import NewSubmissionSerializer, SubmissionSerializer
 
-class ProblemViewSet(viewsets.ModelViewSet):
+from pprint import pprint
+
+
+# 题目列表
+class ProblemListAPIView(generics.ListAPIView):
+
     queryset = Problem.objects.all()
     serializer_class = ProblemListSerializer
-    permission_classes = (
-        IsAuthenticatedOrReadOnly,
-        permissions.IsAuthorOrAdminOrReadOnly,
-        permissions.IsAuthorOrReservedProblemInvisable,
-    )
 
-    # 列举非保留的问题
-    # TODO: filter
+
+# 题目细节
+class ProblemDetailAPIView(generics.RetrieveAPIView):
+
+    queryset = Problem.objects.all()
+    serializer_class = ProblemDetailSerializer
+
+
+# 题目提交
+# GET  - 当前用户提交列表
+# POST - 当前用户创建提交（最近5次）
+class ProblemSubmitAPIView(generics.ListCreateAPIView):
+    
     def get_queryset(self):
-        if self.request.user.is_staff:
-            return self.queryset
-        return self.queryset.filter(reserved=False)
+        problem = self.kwargs['pk']
+        return Submission.objects.filter(author=self.request.user, problem__id=problem)[:5]
 
-    # 根据执行动作，细分使用的序列化对象
-    # TODO: 找更好的方法
     def get_serializer_class(self):
-        if not hasattr(self, 'action') or self.action == 'list':
-            return ProblemListSerializer
-        elif self.action == 'retrieve':
-            return ProblemDetailSerializer
-        elif self.action in ['update', 'create', 'partial_update']:
-            return ProblemUpdateSerializer
-        else:
-            raise Exception('%s' % self.action)
+        if self.request.method == 'GET':
+            return SubmissionSerializer
+        elif self.request.method == 'POST':
+            return NewSubmissionSerializer
 
-    # 创建题目时，当前用户作为作者
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
-
-    @detail_route(renderer_classes=[renderers.StaticHTMLRenderer])
-    def test(self, request, *args, **kwargs):
-        problem = self.get_object()
-        return Response(problem.description)
-
+        problem = Problem.objects.get(pk=self.kwargs['pk'])
+        serializer.save(author=self.request.user, problem=problem)

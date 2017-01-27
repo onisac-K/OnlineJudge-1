@@ -1,5 +1,5 @@
 # Online Judge
-An Online Judge based on Django, Django-Rest-Framework, AngularJS and Docker.
+An Online Judge based on Django, Django-Rest-Framework and Docker.
 
 ## Init
 ```bash

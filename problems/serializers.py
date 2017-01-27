@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 from problems.models import Problem
 
-
 # 题目列表
 class ProblemListSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -14,10 +13,12 @@ class ProblemListSerializer(serializers.HyperlinkedModelSerializer):
 
 # 题目细节
 class ProblemDetailSerializer(serializers.ModelSerializer):
-    author = serializers.HyperlinkedRelatedField(
+    author = serializers.StringRelatedField()
+    author_url = serializers.HyperlinkedRelatedField(
         read_only=True,
         lookup_field='username',
-        view_name='user-detail'
+        view_name='user-detail',
+        source='author'
     )
 
     class Meta:

@@ -17,3 +17,5 @@ class SubmissionViewSet(viewsets.ReadOnlyModelViewSet):
             return SubmissionDetailSerializer
         else:
             raise Exception('%s' % self.action)
+
+
