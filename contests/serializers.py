@@ -8,15 +8,17 @@ from problems.serializers import BriefProblemDetailSerializer
 
 # 比赛列表
 class ContestListSerializer(serializers.HyperlinkedModelSerializer):
-    author = serializers.HyperlinkedRelatedField(
+    author = serializers.StringRelatedField()
+    author_url = serializers.HyperlinkedRelatedField(
         read_only=True,
         lookup_field='username',
-        view_name='user-detail'
+        view_name='user-detail',
+        source='author'
     )
 
     class Meta:
         model = Contest
-        fields = ('id', 'url', 'title', 'public',
+        fields = ('id', 'url', 'title', 'public', 'author_url',
                   'start_time', 'end_time', 'status', 'author')
 
 

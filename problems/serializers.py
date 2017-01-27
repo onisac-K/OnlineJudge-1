@@ -23,7 +23,7 @@ class ProblemDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Problem
-        exclude = ('description_md', 'input_description_md',
+        exclude = ('description_md', 'input_description_md', 'author_url',
                    'output_description_md', 'hint_md', 'reserved')
 
 

@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from problems.models import Problem
-from contests.models import Contest
 from utils.models import CodeLang
+
 from utils.vars import JUDGE_STATUS
 from django.db.models.signals import post_save
 
@@ -12,9 +12,15 @@ class Submission(models.Model):
     # 运行编号
     id = models.AutoField('运行编号', primary_key=True)
     # 提交用户
-    author = models.ForeignKey(User)
+    author = models.ForeignKey(
+        User, models.SET_NULL, null=True, 
+        related_name='submissions'
+    )
     # 题目编号
-    problem = models.ForeignKey(Problem)
+    problem = models.ForeignKey(
+        Problem, models.SET_NULL, null=True,
+        related_name='problem'
+    )
     # 提交时间
     submit_time = models.DateTimeField('提交时间', auto_now_add=True)
 
@@ -54,7 +60,5 @@ def judge_submission(sender, instance, created, **kwargs):
         instance.status = result[0]
         print('=' * 20, 'Judge: ', result[1], '=' * 20)
         instance.save()
-    else:
-        raise Exception('Submission not created.')
 
 post_save.connect(judge_submission, sender=Submission)

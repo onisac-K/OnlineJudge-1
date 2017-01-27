@@ -4,6 +4,7 @@ from utils.models import CodeLang
 
 from utils.markdown import md
 
+
 class Problem(models.Model):
     """基本信息"""
     # 编号
@@ -12,8 +13,9 @@ class Problem(models.Model):
     title = models.CharField('标题', max_length=100, blank=True)
     # 作者
     author = models.ForeignKey(
-        User, blank=True, null=True, related_name='problems',
-        on_delete=models.SET_NULL
+        User, models.SET_NULL,
+        blank=True, null=True,
+        related_name='problems',
     )
     # 允许的语言
     languages = models.ManyToManyField(CodeLang, related_name='languages')

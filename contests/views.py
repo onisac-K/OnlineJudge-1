@@ -13,16 +13,18 @@ from contests.serializers import (
 )
 
 
+# 比赛列表
 class ContestListAPIView(generics.ListAPIView):
     queryset = Contest.objects.all()
     serializer_class = ContestListSerializer
 
-
+# 比赛细节
 class ContestDetailAPIView(generics.RetrieveAPIView):
     queryset = Contest.objects.all()
     serializer_class = ContestDetailSerializer
 
 
+# 比赛题目细节
 class ContestProblemDetailAPIView(generics.RetrieveAPIView):
     queryset = ContestProblem.objects.all()
     serializer_class = ContestProblemDetailSerializer
