@@ -44,11 +44,11 @@ class AdminProblemDetailSerializer(ProblemDetailSerializer):
         fields = '__all__'
 
 
-# 题目细节-简单-即比赛状态
+# 题目细节-简略-即比赛状态
 class BriefProblemDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Problem
         exclude = ('description_md', 'input_description_md',
                    'output_description_md', 'hint_md', 'reserved',
-                   'author', 'id')
+                   'author', 'id', 'languages', 'create_time', 'source')

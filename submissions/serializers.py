@@ -43,3 +43,11 @@ class NewSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submission
         fields = ('source_code', 'language')
+
+
+# 增加提交 - 带题号
+class NewSubissionWithPIDSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Submission
+        fields = ('problem', 'language', 'source_code')

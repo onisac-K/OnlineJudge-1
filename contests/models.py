@@ -114,7 +114,7 @@ class ContestProblem(models.Model):
         verbose_name = verbose_name_plural = '比赛题目'
 
     def __str__(self):
-        return '%s, Problem %d:%d' % (
+        return '%s, Problem %d(%d)' % (
             self.contest,
             self.sort,
             self.problem.id,

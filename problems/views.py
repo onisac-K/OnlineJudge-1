@@ -31,10 +31,10 @@ class ProblemDetailAPIView(generics.RetrieveAPIView):
 
 
 # 题目提交
-# GET  - 当前用户提交列表
-# POST - 当前用户创建提交（最近5次）
+# GET  - 当前用户提交列表（最近5次）
+# POST - 当前用户创建提交
 class ProblemSubmitAPIView(generics.ListCreateAPIView):
-    
+
     def get_queryset(self):
         problem = self.kwargs['pk']
         return Submission.objects.filter(author=self.request.user, problem__id=problem)[:5]
@@ -44,6 +44,8 @@ class ProblemSubmitAPIView(generics.ListCreateAPIView):
             return SubmissionSerializer
         elif self.request.method == 'POST':
             return NewSubmissionSerializer
+        else:
+            raise Exception('Unhandled method: %s' % self.request.method)
 
     def perform_create(self, serializer):
         problem = Problem.objects.get(pk=self.kwargs['pk'])

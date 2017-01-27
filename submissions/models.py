@@ -16,7 +16,7 @@ class Submission(models.Model):
         User, models.SET_NULL, null=True, 
         related_name='submissions'
     )
-    # 题目编号
+    # 题目
     problem = models.ForeignKey(
         Problem, models.SET_NULL, null=True,
         related_name='problem'

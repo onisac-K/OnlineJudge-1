@@ -1,10 +1,18 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
-from contests.models import Contest, ContestProblem
+from contests.models import (
+    Contest,
+    ContestAccount,
+    ContestProblem,
+    ContestSubmission,
+    ContestStatistic,
+)
 from utils.serializers import MultiParamsHyperlinkedIdentityField
 
 from problems.serializers import BriefProblemDetailSerializer
+
+# from submissions.serializers import NewSubmissionSerializer
 
 # 比赛列表
 class ContestListSerializer(serializers.HyperlinkedModelSerializer):
@@ -18,23 +26,34 @@ class ContestListSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Contest
-        fields = ('id', 'url', 'title', 'public', 'author_url',
-                  'start_time', 'end_time', 'status', 'author')
+        fields = ('id', 'url', 'title', 'public', 'status',
+                  'start_time', 'end_time', 'author_url', 'author')
 
 
 # 比赛题目列表
+# 只是比赛题目 将被包含在{{比赛细节}}中
 class ContestProblemSerializer(serializers.ModelSerializer):
 
     url = MultiParamsHyperlinkedIdentityField(
         lookup_fields=(('contest__id', 'contest_id'),
                        ('sort', 'problem_sort')),
-        view_name='contestproblem-detail',
+        view_name='contest-problem-detail',
         read_only=True
     )
 
     class Meta:
         model = ContestProblem
         fields = ('sort', 'problem', 'url')
+
+
+# 比赛细节
+class ContestDetailSerializer(serializers.ModelSerializer):
+    problems = ContestProblemSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Contest
+        fields = ('id', 'title', 'problems', 'start_time',
+                  'end_time', 'announcement', 'status')
 
 
 # 比赛题目细节
@@ -45,34 +64,12 @@ class ContestProblemDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContestProblem
         fields = ('sort', 'problem')
-        # depth = 1
 
 
-# 比赛细节
-class ContestDetailSerializer(serializers.ModelSerializer):
-    author = serializers.HyperlinkedRelatedField(
-        read_only=True,
-        lookup_field='username',
-        view_name='user-detail'
-    )
-
-    problems = ContestProblemSerializer(many=True, read_only=True)
+# 比赛提交列表
+class ContestSubmissionListSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Contest
-        fields = ('id', 'title', 'public', 'problems', 'start_time',
-                  'end_time', 'announcement', 'author', 'status')
+        model = ContestSubmission
+        fields = '__all__'
 
-
-# # 比赛题目列表
-# class ContestProblemListSerializer(serializers.ModelSerializer):
-
-#     sort = serializers.HyperlinkedRelatedField(
-#         read_only=True,
-#         lookup_field='pk',
-#         view_name='contest-problem'
-#     )
-
-#     class Meta:
-#         model = ContestProblem
-#         fields = '__all__'
