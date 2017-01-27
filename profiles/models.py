@@ -14,35 +14,9 @@ class Profile(models.Model):
     # 资料
     nickname = models.CharField('昵称', max_length=30, blank=True)
     realname = models.CharField('姓名', max_length=30, blank=True)
+    student_id = models.CharField('学号', max_length=30, blank=True, null=True)
     blog = models.URLField('博客', blank=True, null=True)
     motto = models.CharField('签名', max_length=254, blank=True)
-    student_id = models.CharField('学号', max_length=30, blank=True, null=True)
-
-    # 常用OJ的用户名
-    hdu_id = models.CharField(
-        'HDU Online Judge 用户名',
-        max_length=30,
-        blank=True,
-        null=True
-    )
-    cf_id = models.CharField(
-        'Codeforces 用户名',
-        max_length=30,
-        blank=True,
-        null=True
-    )
-    bc_id = models.CharField(
-        'Best Coder 用户名',
-        max_length=30,
-        blank=True,
-        null=True
-    )
-    tc_id = models.CharField(
-        'Top Coder 用户名',
-        max_length=30,
-        blank=True,
-        null=True
-    )
 
     # 刷题信息
     accept_problem_count = models.IntegerField('通过题目数', default=0)
