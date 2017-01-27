@@ -20,6 +20,17 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
                   'status', 'language', 'url', 'author_url')
 
 
+# 提交列表 - 简略 即比赛时显示的列表
+# TODO: url改为比赛内的url
+class BriefSubmissionSerializer(serializers.HyperlinkedModelSerializer):
+    language = serializers.StringRelatedField()
+    
+    class Meta:
+        model = Submission
+        fields = ('id', 'url', 'submit_time', 'status', 'notes',
+                  'language', 'exec_memory', 'exec_time')
+
+
 # 提交细节
 class SubmissionDetailSerializer(serializers.ModelSerializer):
 

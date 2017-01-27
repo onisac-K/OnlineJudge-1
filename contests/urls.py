@@ -33,16 +33,21 @@ urlpatterns = [
     #      views.ContestRanklistAPIView.as_view(),
     #      name='contest-ranklist'
     # ),
-    # 比赛提交列表(当前用户-全部) [GET:最近提交] POST:需要指定题号]
+    # # 比赛提交列表(当前用户-全部) [GET:最近提交]
+    # url(
+    #     r'^(?P<pk>\d+)/submission/$',
+    #     views.ContestSubmissionListAPIView.as_view(),
+    #     name='contest-submission-list'
+    # ),
+    # # 比赛提交状态(当前用户-某道题) [GET:该题最近提交 POST:从URL获取题号]
+    # url(
+    #     r'^(?P<contest_id>\d+)/submission/(?P<problem_sort>\d+)/$',
+    #     views.ContestProblemSubmissionListAPIView.as_view(),
+    #     name='contest-problem-submission-list'
+    # ),
     url(
-        r'^(?P<pk>\d+)/submission/$',
-        views.ContestSubmissionListAPIView.as_view(),
-        name='contest-submission-list'
-    ),
-    # 比赛提交状态(当前用户-某道题) [GET:该题最近提交 POST:从URL获取题号]
-    url(
-        r'^(?P<contest_id>\d+)/submission/(?P<problem_sort>\d+)/$',
+        r'^(?P<contest_id>\d+)/submission/((?P<problem_sort>\d+)/)?$',
         views.ContestProblemSubmissionListAPIView.as_view(),
-        name='contest-problem-submission-list'
+        name='contest-submission-list'
     ),
 ]
