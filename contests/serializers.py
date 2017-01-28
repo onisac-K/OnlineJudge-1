@@ -12,7 +12,7 @@ from utils.serializers import MultiParamsHyperlinkedIdentityField
 
 from problems.serializers import BriefProblemDetailSerializer
 
-from submissions.serializers import BriefSubmissionSerializer
+from submissions.serializers import BriefSubmissionSerializer, SubmissionDetailSerializer
 
 
 # 比赛列表
@@ -70,7 +70,25 @@ class ContestProblemDetailSerializer(serializers.ModelSerializer):
 class ContestSubmissionListSerializer(serializers.ModelSerializer):
     submission = BriefSubmissionSerializer(read_only=True)
     problem = serializers.SlugRelatedField(read_only=True, slug_field='sort')
+    url = MultiParamsHyperlinkedIdentityField(
+        lookup_fields=(
+            ('problem__contest__id', 'contest_id'),
+            ('submission__id', 'submission_id')
+        ),
+        view_name='contest-submission-detail',
+        read_only=True
+    )
 
     class Meta:
         model = ContestSubmission
-        fields = ('problem', 'submission',)
+        fields = ('problem', 'submission', 'url')
+
+
+# 比赛提交细节
+class ContestSubmissionDetailSerializer(serializers.ModelSerializer):
+    submission = SubmissionDetailSerializer(read_only=True)
+    problem = serializers.SlugRelatedField(read_only=True, slug_field='sort')
+
+    class Meta:
+        model = ContestSubmission
+        fields = '__all__'

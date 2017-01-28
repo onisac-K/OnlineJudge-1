@@ -19,12 +19,12 @@ from django.contrib import admin
 # from rest_framework.urlpatterns import format_suffix_patterns
 
 # views
-from .views import api_root
+from .views import index
 import profiles
 
 urlpatterns = [
     # API ROOT
-    url(r'^$', api_root, name='api-root'),
+    url(r'^$', index, name='api-root'),
 
     # 管理员
     url(r'^admin/', admin.site.urls, name='admin'),
@@ -35,13 +35,13 @@ urlpatterns = [
     url(r'^register/$', profiles.views.SignUpAPIView.as_view(), name='sign-up'),
 
     # Problem 相关
-    url(r'^problem/', include('problems.urls')),
+    url(r'^problem/', include('problems.urls'), name='problem'),
 
     # Contest 相关
-    url(r'^contest/', include('contests.urls')),
+    url(r'^contest/', include('contests.urls'), name='contest'),
 
     # Submission 相关
-    url(r'^submission/', include('submissions.urls')),
+    url(r'^submission/', include('submissions.urls'), name='submission'),
 ]
 
 # Login and logout views for the browsable API

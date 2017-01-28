@@ -15,17 +15,30 @@ urlpatterns = [
         views.ContestDetailAPIView.as_view(),
         name='contest-detail'
     ),
-    # # 比赛题目细节
+    # 比赛题目细节
     url(
         r'^(?P<contest_id>\d+)/problem/(?P<problem_sort>\d+)/$',
         views.ContestProblemDetailAPIView.as_view(),
         name='contest-problem-detail'
     ),
-    # 比赛提交状态(全部)
+    # 比赛状态(全部提交)
+    # TODO: 显示用户最近所有的比赛提交
     url(
-        r'^(?P<pk>\d+)/status/$',
-        views.ContestStatusAPIView.as_view(),
-        name='contest-status'
+        r'^(?P<pk>\d+)/submissions/$',
+        views.ContestSubmissionListAPIView.as_view(),
+        name='contest-submissions'
+    ),
+    # 比赛状态细节(显示某提交的代码)
+    url(
+        r'^(?P<contest_id>\d+)/submission/(?P<submission_id>\d+)/$',
+        views.ContestSubmissionDetailAPIView.as_view(),
+        name='contest-submission-detail'
+    ),
+    # 每道题用户自己的提交 [GET:获取 POST:提交]
+    url(
+        r'^(?P<contest_id>\d+)/problem/(?P<problem_sort>\d+)/submission/$',
+        views.ContestProblemSubmissionListAPIView.as_view(),
+        name='contest-submission-list'
     ),
     # # 比赛排名
     # url(
@@ -33,21 +46,4 @@ urlpatterns = [
     #      views.ContestRanklistAPIView.as_view(),
     #      name='contest-ranklist'
     # ),
-    # # 比赛提交列表(当前用户-全部) [GET:最近提交]
-    # url(
-    #     r'^(?P<pk>\d+)/submission/$',
-    #     views.ContestSubmissionListAPIView.as_view(),
-    #     name='contest-submission-list'
-    # ),
-    # # 比赛提交状态(当前用户-某道题) [GET:该题最近提交 POST:从URL获取题号]
-    # url(
-    #     r'^(?P<contest_id>\d+)/submission/(?P<problem_sort>\d+)/$',
-    #     views.ContestProblemSubmissionListAPIView.as_view(),
-    #     name='contest-problem-submission-list'
-    # ),
-    url(
-        r'^(?P<contest_id>\d+)/submission/((?P<problem_sort>\d+)/)?$',
-        views.ContestProblemSubmissionListAPIView.as_view(),
-        name='contest-submission-list'
-    ),
 ]

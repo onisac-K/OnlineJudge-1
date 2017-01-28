@@ -1,2 +1,98 @@
-123
-{{ request }}
+<!DOCTYPE html>
+<html lang="en">
+  <head> {% load staticfiles %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico"> 
+
+    <title>上海大学在线判题系统</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "dist/css/bootstrap.min.css" %}" rel="stylesheet">
+
+    <!-- Bootstrap theme -->
+    <link href="{% static "dist/css/bootstrap-theme.min.css" %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static "theme.css" %}" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="{% static "assets/js/ie8-responsive-file-warning.js" %}"></script><![endif]-->
+    <script src="{% static "assets/js/ie-emulation-modes-warning.js" %}"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body role="document">
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">导航栏</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Online Judge</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li id="index"><a href="/">首页</a></li>
+            <li id="problem"><a href="/problem">题库</a></li>
+            <li id="submission"><a href="/submission">状态</a></li>
+            <li id="ranklist"><a href="{% url 'ranklist' %}">排名</a></li>
+            <li><a href="/contest">比赛</a></li>
+            <li><a href="#about">关于</a></li>
+          </ul>
+          {% if request.user.is_authenticated %}
+            <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                  {{ request.user }}
+                  <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  {% if request.user.is_staff %}
+                      <li><a href="/admin/">后台管理</a></li>
+                      <li role="separator" class="divider"></li>
+                  {% endif %}
+                  <li><a href="{% url 'user-detail' request.user.username %}">我的资料</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="/logout/">退出</a></li>
+                </ul>
+              </li>
+            </ul>
+          {% else %}
+            <form class="navbar-form navbar-right" role="form">
+              <a class="btn btn-primary" href="/login/">登录</a>
+              <a class="btn btn-success" href="/register/">注册</a>
+            </form>
+          {% endif %}
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+  <div class="container theme-showcase" role="main">
+    {% block body %}{% endblock %}
+  </div>
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+  <script src="{% static "dist/js/bootstrap.min.js" %}"></script>
+  <script src="{% static "assets/js/docs.min.js" %}"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="{% static "assets/js/ie10-viewport-bug-workaround.js" %}"></script>
+
+</div>
+  </body>
+</html>

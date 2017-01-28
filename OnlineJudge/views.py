@@ -5,6 +5,7 @@ from rest_framework.reverse import reverse
 from . import urls
 from django.urls.resolvers import RegexURLPattern, RegexURLResolver
 from django.urls.exceptions import NoReverseMatch
+from django.shortcuts import render
 
 
 @api_view(['GET'])
@@ -27,3 +28,7 @@ def api_root(request, format=None):
     #     'test': reverse('contest-list', request=request, format=format),
     # })
     return Response(dfs(urls.urlpatterns))
+
+
+def index(request):
+    return render(request, 'index.html')

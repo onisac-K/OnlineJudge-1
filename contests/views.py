@@ -16,13 +16,18 @@ from contests.serializers import (
     ContestDetailSerializer,
     ContestProblemDetailSerializer,
     ContestSubmissionListSerializer,
+    ContestSubmissionDetailSerializer,
 )
 
 from submissions.models import Submission
 from submissions.serializers import NewSubmissionSerializer
 
 
+from contests.permissions import IsAuthorOrAdminOrDeny
+
 # 比赛列表
+
+
 class ContestListAPIView(generics.ListAPIView):
     queryset = Contest.objects.all()
     serializer_class = ContestListSerializer
@@ -51,10 +56,28 @@ class ContestProblemDetailAPIView(generics.RetrieveAPIView):
         return obj
 
 
-# 比赛提交状态(全部)
-class ContestStatusAPIView(generics.ListAPIView):
+# 比赛提交状态(列表 全部)
+class ContestSubmissionListAPIView(generics.ListAPIView):
     queryset = ContestSubmission.objects.all()
     serializer_class = ContestSubmissionListSerializer
+
+
+# 比赛提交状态(细节)
+class ContestSubmissionDetailAPIView(generics.RetrieveAPIView):
+    queryset = ContestSubmission.objects.all()
+    serializer_class = ContestSubmissionDetailSerializer
+    permission_classes = [IsAuthorOrAdminOrDeny, ]
+    lookup_fields = (
+        ('problem__contest__id', 'contest_id'),
+        ('submission__id', 'submission_id')
+    )
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        filter_kwargs = {x[0]: self.kwargs[x[1]] for x in self.lookup_fields}
+        obj = get_object_or_404(queryset, **filter_kwargs)
+        self.check_object_permissions(self.request, obj)
+        return obj
 
 
 # 比赛提交状态
@@ -67,9 +90,7 @@ class ContestProblemSubmissionListAPIView(generics.ListCreateAPIView):
                 submission__author=self.request.user,
                 problem__contest__id=cid
             )
-            if pid != None:
-                submissions = submissions.filter(problem__sort=pid)
-            return submissions
+            return pid and submissions.filter(problem__sort=pid) or submissions
 
     def get_serializer_class(self):
         if self.request.method == 'GET':

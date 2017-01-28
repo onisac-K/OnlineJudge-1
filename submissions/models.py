@@ -6,6 +6,10 @@ from utils.models import CodeLang
 from utils.vars import JUDGE_STATUS
 from django.db.models.signals import post_save
 
+from pygments.lexers import get_lexer_by_name
+from pygments.formatters.html import HtmlFormatter
+from pygments import highlight
+
 
 class Submission(models.Model):
     """基本信息"""
@@ -13,7 +17,7 @@ class Submission(models.Model):
     id = models.AutoField('运行编号', primary_key=True)
     # 提交用户
     author = models.ForeignKey(
-        User, models.SET_NULL, null=True, 
+        User, models.SET_NULL, null=True,
         related_name='submissions'
     )
     # 题目
@@ -37,6 +41,7 @@ class Submission(models.Model):
     language = models.ForeignKey(CodeLang)
     # 代码
     source_code = models.TextField('源代码', blank=True)
+    highlighted = models.TextField('高亮源代码', blank=True)
     # 公开代码
     public = models.BooleanField('公开代码', default=False)
     # 备注
@@ -49,6 +54,12 @@ class Submission(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+    def save(self, *args, **kwargs):
+        lexer = get_lexer_by_name(self.language.name)
+        formatter = HtmlFormatter(style='friendly', linenos=True, full=True)
+        self.highlighted = highlight(self.source_code, lexer, formatter)
+        super(Submission, self).save(*args, **kwargs)
 
 
 # 创建Submission时自动判题

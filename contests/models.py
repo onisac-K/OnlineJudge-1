@@ -136,7 +136,7 @@ class ContestSubmission(models.Model):
 
     class Meta:
         unique_together = ('problem', 'submission')
-        ordering = ('problem', 'submission')
+        ordering = ('submission', 'problem')
         verbose_name = verbose_name_plural = '比赛提交'
 
     def __str__(self):

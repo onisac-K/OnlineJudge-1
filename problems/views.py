@@ -37,7 +37,11 @@ class ProblemSubmitAPIView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         problem = self.kwargs['pk']
-        return Submission.objects.filter(author=self.request.user, problem__id=problem)[:5]
+        return Submission.objects.filter(
+            author=self.request.user,
+            problem__id=problem,
+            involved_contest=None
+        )[:5]
 
     def get_serializer_class(self):
         if self.request.method == 'GET':

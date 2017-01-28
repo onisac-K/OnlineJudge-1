@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block body %}
+	{# 页数标题 #}
+	<div class="page-header">
+	  <h1>Ranklist</h1>
+	</div>
+  {# 排名表 #}
+	<table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th width="50">#</th>
+	    <th>用户名</th>
+	    <th>昵称</th>
+	    <th>签名</th>
+	    <th>通过</th>
+	    <th>提交</th>
+	    <th>比率</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for rank in results %}
+		  <tr>
+		    <td>{{ forloop.counter | add: count }}</td>
+		    <td><a href="{% url 'user-detail' rank.username %}">{{ rank.username }}</a></td>
+		    <td>{{ rank.nickname }}</td>
+		    <td>{{ rank.motto }}</td>
+		    <td>{{ rank.accept }}</td>
+		    <td>{{ rank.submit }}</td>
+		    <td>{% widthratio rank.accept rank.submit 100 %}%</td>
+		  </tr>
+	  {% endfor %}
+	</tbody>
+	</table>
+	{# 页码导航条 #}
+  {% if ranklist.has_other_pages %}
+    <ul class="pagination">
+    {% if ranklist.has_previous %}
+      <li><a href="{% url 'ranklist-page' ranklist.previous_page_number %}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in ranklist.paginator.page_range %}
+      {% if ranklist.number == i %}
+	      <li class="active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
+      {% else %}
+	      <li><a href="{% url 'ranklist-page' i %}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if ranklist.has_next %}
+      <li><a href="{% url 'ranklist-page' ranklist.next_page_number %}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+    </ul>
+  {% endif %}
+{% endblock %}
