@@ -92,3 +92,19 @@ class ContestSubmissionDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContestSubmission
         fields = '__all__'
+
+
+# 比赛参赛人员列表
+class ContestParticipantListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ContestAccount
+        fields = ('name', 'user', 'date_joined')
+
+
+# 参加比赛 即分配比赛账号
+class NewContestAccountSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ContestAccount
+        fields = ('name', )

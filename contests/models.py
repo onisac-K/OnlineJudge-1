@@ -47,7 +47,7 @@ class Contest(models.Model):
         return 'Ended'
 
     class Meta:
-        ordering = ['id']
+        ordering = ['-id']
         verbose_name = verbose_name_plural = '比赛'
 
     def __str__(self):
@@ -74,6 +74,8 @@ class ContestAccount(models.Model):
     )
     # 比赛中显示的名称 即队伍名
     name = models.CharField('队伍名', max_length=100, blank=True)
+    # 注册参加比赛的时间
+    date_joined = models.DateTimeField('注册时间', auto_now_add=True)
 
     """排名信息"""
     accept_count = models.IntegerField('通过题数', default=0)
@@ -81,7 +83,7 @@ class ContestAccount(models.Model):
     penalty = models.IntegerField('罚时', default=0)
 
     class Meta:
-        ordering = ('contest', 'user')
+        ordering = ('contest', 'date_joined', 'user')
         unique_together = ('user', 'contest')
         verbose_name = verbose_name_plural = '比赛账号'
 

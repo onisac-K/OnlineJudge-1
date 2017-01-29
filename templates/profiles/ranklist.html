@@ -20,7 +20,7 @@
 	<tbody>
 	  {% for rank in results %}
 		  <tr>
-		    <td>{{ forloop.counter | add: count }}</td>
+		    <td>{{ forloop.counter }}</td>
 		    <td><a href="{% url 'user-detail' rank.username %}">{{ rank.username }}</a></td>
 		    <td>{{ rank.nickname }}</td>
 		    <td>{{ rank.motto }}</td>
@@ -32,10 +32,10 @@
 	</tbody>
 	</table>
 	{# 页码导航条 #}
-  {% if ranklist.has_other_pages %}
+  {% if next %}
     <ul class="pagination">
-    {% if ranklist.has_previous %}
-      <li><a href="{% url 'ranklist-page' ranklist.previous_page_number %}">&laquo;</a></li>
+    {% if previous %}
+      <li><a href="{{ previous }}">&laquo;</a></li>
     {% else %}
       <li class="disabled"><span>&laquo;</span></li>
     {% endif %}

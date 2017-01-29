@@ -4,7 +4,7 @@ from rest_framework import renderers
 from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 from problems.models import Problem
 from problems import permissions, utils
@@ -34,6 +34,8 @@ class ProblemDetailAPIView(generics.RetrieveAPIView):
 # GET  - 当前用户提交列表（最近5次）
 # POST - 当前用户创建提交
 class ProblemSubmitAPIView(generics.ListCreateAPIView):
+
+    permission_classes = [IsAuthenticated,]
 
     def get_queryset(self):
         problem = self.kwargs['pk']

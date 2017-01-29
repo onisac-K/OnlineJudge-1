@@ -13,16 +13,16 @@ class RanklistAPIView(generics.ListAPIView):
         'profile__submit_count'
     )
     serializer_class = RanklistSerializer
-    renderer_classes = (TemplateHTMLRenderer,)
-    template_name = './profiles/ranklist.html'
+    # renderer_classes = (TemplateHTMLRenderer,)
+    # template_name = './profiles/ranklist.html'
 
 # 用户信息
 class UserProfileAPIView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
     lookup_field = 'username'
-    renderer_classes = (TemplateHTMLRenderer,)
-    template_name = './profiles/profile.html'
+    # renderer_classes = (TemplateHTMLRenderer,)
+    # template_name = './profiles/profile.html'
 
 
 # 注册

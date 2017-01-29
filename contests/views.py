@@ -1,5 +1,6 @@
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from django.shortcuts import get_object_or_404
 
@@ -17,17 +18,21 @@ from contests.serializers import (
     ContestProblemDetailSerializer,
     ContestSubmissionListSerializer,
     ContestSubmissionDetailSerializer,
+    ContestParticipantListSerializer,
+    NewContestAccountSerializer,
 )
 
 from submissions.models import Submission
 from submissions.serializers import NewSubmissionSerializer
 
+from contests.permissions import (
+    IsParticipantOrAdminOrDeny,
+    IsAuthorOrAdminOrDeny,
+    IsPulicAuthorizedUnregisteredOrAdminOrDeny
+)
 
-from contests.permissions import IsAuthorOrAdminOrDeny
 
 # 比赛列表
-
-
 class ContestListAPIView(generics.ListAPIView):
     queryset = Contest.objects.all()
     serializer_class = ContestListSerializer
@@ -36,6 +41,8 @@ class ContestListAPIView(generics.ListAPIView):
 # 比赛细节
 class ContestDetailAPIView(generics.RetrieveAPIView):
     queryset = Contest.objects.all()
+    permission_classes = [IsAuthenticated,
+                          IsParticipantOrAdminOrDeny,]
     serializer_class = ContestDetailSerializer
 
 
@@ -83,6 +90,8 @@ class ContestSubmissionDetailAPIView(generics.RetrieveAPIView):
 # 比赛提交状态
 class ContestProblemSubmissionListAPIView(generics.ListCreateAPIView):
 
+    permission_classes = [IsAuthenticated, ]
+
     def get_queryset(self):
         if self.request.method == 'GET':
             cid, pid = self.kwargs['contest_id'], self.kwargs['problem_sort']
@@ -110,4 +119,26 @@ class ContestProblemSubmissionListAPIView(generics.ListCreateAPIView):
         ContestSubmission.objects.create(
             problem=contest_problem,
             submission=submission
+        )
+
+
+# 比赛参赛人员
+class ContestParticipantListAPIView(generics.ListCreateAPIView):
+    permission_classes = [IsPulicAuthorizedUnregisteredOrAdminOrDeny, ]
+
+    def get_queryset(self):
+        cid = self.kwargs['pk']
+        return ContestAccount.objects.filter(contest__id=cid)
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ContestParticipantListSerializer
+        elif self.request.method == 'POST':
+            return NewContestAccountSerializer
+
+    def perform_create(self, serializer):
+        contest = Contest.objects.get(pk=self.kwargs['pk'])
+        serializer.save(
+            contest=contest,
+            user=self.request.user
         )

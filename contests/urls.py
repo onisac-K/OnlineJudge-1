@@ -40,6 +40,12 @@ urlpatterns = [
         views.ContestProblemSubmissionListAPIView.as_view(),
         name='contest-submission-list'
     ),
+    # 比赛参加人员 [GET:获取 POST:参加比赛]
+    url(
+        r'^(?P<pk>\d+)/participants/$',
+        views.ContestParticipantListAPIView.as_view(),
+        name='contest-participants'
+    ),
     # # 比赛排名
     # url(
     #      r'^(?P<pk>\d+)/ranklist/$',
